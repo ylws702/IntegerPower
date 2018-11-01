@@ -152,9 +152,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BigInteger.h" />
+    <ClInclude Include="BinaryBigInteger.h" />
+    <ClInclude Include="DecimalBigInteger.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BigInteger.cpp" />
+    <ClCompile Include="BinaryBigInteger.cpp" />
+    <ClCompile Include="DecimalBigInteger.cpp" />
     <ClCompile Include="IntegerPower.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
