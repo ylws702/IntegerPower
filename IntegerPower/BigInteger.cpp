@@ -11,6 +11,11 @@ const std::vector<BigInteger::Node>& BigInteger::GetBits() const
     return std::as_const(this->bits);
 }
 
+void BigInteger::SetBits(const std::vector<Node>& bits)
+{
+    this->bits = bits;
+}
+
 std::istream & operator>>(std::istream& is, BigInteger & i)
 {
     int bit;

@@ -8,6 +8,7 @@ class BigInteger
 public:
     inline void Clear();
     const std::vector<Node>& GetBits() const;
+    void SetBits(const std::vector<Node>& bits);
     friend std::istream& operator>>(std::istream& is, BigInteger&i);
     friend std::ostream& operator<<(std::ostream& os, const BigInteger&i);
     friend std::ostream& operator<<(std::ostream& os, const BigInteger&&i);
