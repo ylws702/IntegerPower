@@ -2,14 +2,14 @@
 #include "BinaryBigInteger.h"
 
 
-BinaryBigInteger::BinaryBigInteger(const BigInteger && decimal)
+BinaryBigInteger::BinaryBigInteger(const DecimalBigInteger && decimal)
 {
     auto bits = decimal.GetBits();
     decltype(bits)::value_type remainder;
     int length, i;
     while (!bits.empty())
     {
-        length = bits.size();
+        length = (int)bits.size();
         remainder = 0;
         for (i = length; --i >= 0;)
         {
@@ -28,9 +28,9 @@ BinaryBigInteger::BinaryBigInteger(const BigInteger && decimal)
 DecimalBigInteger BinaryBigInteger::ToDecimalBigInteger() const
 {
     DecimalBigInteger result;
-    int length1 = this->bits.size(),
+    int length1 = (int)this->bits.size(),
         length2 = (int)(length1*0.30102999566398120) + 1,
-        i, j, k;
+        i, j;
     if (length1 == 1 && this->bits[0] == 0)
     {
         return result;
@@ -40,7 +40,7 @@ DecimalBigInteger BinaryBigInteger::ToDecimalBigInteger() const
     bits[0] = this->bits[0] == 0 ? 0 : 1;
     for (i = 1; i < length1; ++i)
     {
-        length2 = powerOfTwo.size();
+        length2 = (int)powerOfTwo.size();
         for (j = 0; j < length2; ++j)
         {
             powerOfTwo[j] <<= 1;

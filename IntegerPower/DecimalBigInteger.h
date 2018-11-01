@@ -1,5 +1,7 @@
 #pragma once
+
 #include "BigInteger.h"
+#include "BinaryBigInteger.h"
 class DecimalBigInteger :
     public BigInteger
 {

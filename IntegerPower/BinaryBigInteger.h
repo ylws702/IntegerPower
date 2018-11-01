@@ -6,8 +6,9 @@ class BinaryBigInteger :
 {
 public:
     BinaryBigInteger() {}
-    BinaryBigInteger(const BigInteger& bigInt) :BinaryBigInteger(std::move(bigInt)) {}
-    BinaryBigInteger(const BigInteger&& bigInt);
+    BinaryBigInteger(const DecimalBigInteger& bigInt) :
+        BinaryBigInteger(std::move(bigInt)) {}
+    BinaryBigInteger(const DecimalBigInteger&& bigInt);
     DecimalBigInteger ToDecimalBigInteger()const;
 };
 

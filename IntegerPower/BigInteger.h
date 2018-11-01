@@ -1,4 +1,5 @@
 #pragma once
+
 #include <cctype>
 #include <iostream>
 #include <vector>
@@ -16,4 +17,3 @@ public:
 protected:
     std::vector<Node> bits;
 };
-
