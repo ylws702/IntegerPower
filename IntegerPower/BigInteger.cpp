@@ -16,6 +16,19 @@ void BigInteger::SetBits(const std::vector<Node>& bits)
     this->bits = bits;
 }
 
+void BigInteger::Print() const
+{
+    char* str = new char[this->bits.size()+1];
+    int i = -1;
+    for (auto it = this->bits.cbegin(); it != this->bits.cend(); ++it)
+    {
+        str[++i] = *it + '0';
+    }
+    str[++i] = '\0';
+    std::printf("%s", str);
+    delete[] str;
+}
+
 std::istream & operator>>(std::istream& is, BigInteger & i)
 {
     int bit;
@@ -42,9 +55,14 @@ std::ostream & operator<<(std::ostream & os, const BigInteger & i)
 
 std::ostream & operator<<(std::ostream & os, const BigInteger && i)
 {
+    char *str = new char[i.bits.size() + 1];
+    int j = -1;
     for (auto it = i.bits.crbegin(); it != i.bits.crend(); ++it)
     {
-        os << (unsigned)*it;
+        str[++j] = *it + '0';
     }
+    str[++j] = '\0';
+    os << str;
+    delete[] str;
     return os;
 }

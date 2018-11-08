@@ -33,10 +33,10 @@ DecimalBigInteger DecimalBigInteger::operator^(const DecimalBigInteger & a) cons
         }
     }
     auto power = BinaryBigInteger(a).GetBits();
-    DecimalBigInteger tmp=*this, 
+    DecimalBigInteger tmp = *this,
         result;
-    int length = power.size(), i;
-    if (power[0]==1)
+    int length = (int)power.size(), i;
+    if (power[0] == 1)
     {
         result = tmp;
     }
@@ -47,7 +47,7 @@ DecimalBigInteger DecimalBigInteger::operator^(const DecimalBigInteger & a) cons
     for (i = 1; i < length; i++)
     {
         tmp *= tmp;
-        if (power[i]==1)
+        if (power[i] == 1)
         {
             result *= tmp;
         }
@@ -55,7 +55,7 @@ DecimalBigInteger DecimalBigInteger::operator^(const DecimalBigInteger & a) cons
     return result;
 }
 
-DecimalBigInteger & DecimalBigInteger::operator*=(const DecimalBigInteger & a)
+DecimalBigInteger& DecimalBigInteger::operator*=(const DecimalBigInteger & a)
 {
     decltype(a.bits) result;
     decltype(result)::value_type tmp;
@@ -91,24 +91,6 @@ DecimalBigInteger & DecimalBigInteger::operator*=(const DecimalBigInteger & a)
     }
     this->bits = result;
     return *this;
-}
-
-bool DecimalBigInteger::operator!=(const DecimalBigInteger & a) const
-{
-    int length = (int)this->bits.size(),
-        i;
-    if (a.bits.size() != length)
-    {
-        return true;
-    }
-    for (i = 0; i < length; ++i)
-    {
-        if (this->bits[i] != a.bits[i])
-        {
-            return true;
-        }
-    }
-    return false;
 }
 
 DecimalBigInteger & DecimalBigInteger::operator++()

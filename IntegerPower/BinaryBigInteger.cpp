@@ -35,7 +35,7 @@ DecimalBigInteger BinaryBigInteger::ToDecimalBigInteger() const
     {
         return result;
     }
-    decltype(this->bits) bits(length2,0),
+    decltype(this->bits) bits(length2, 0),
         powerOfTwo(1, 1);
     bits[0] = this->bits[0] == 0 ? 0 : 1;
     for (i = 1; i < length1; ++i)
@@ -59,7 +59,7 @@ DecimalBigInteger BinaryBigInteger::ToDecimalBigInteger() const
             powerOfTwo.emplace_back(1);
             ++length2;
         }
-        if (this->bits[i]==1)
+        if (this->bits[i] == 1)
         {
             for (j = 0; j < length2; ++j)
             {

@@ -2,10 +2,14 @@
 
 #include <cctype>
 #include <iostream>
+#include <iterator>
 #include <vector>
 class BigInteger
 {
-    using Node = std::uint8_t;
+protected:
+    using Node = uint32_t;
+    static_assert(std::is_integral<Node>::value, "Integral required.");
+    std::vector<Node> bits;
 public:
     inline void Clear();
     const std::vector<Node>& GetBits() const;
@@ -13,7 +17,6 @@ public:
     friend std::istream& operator>>(std::istream& is, BigInteger&i);
     friend std::ostream& operator<<(std::ostream& os, const BigInteger&i);
     friend std::ostream& operator<<(std::ostream& os, const BigInteger&&i);
+    virtual void Print()const;
 
-protected:
-    std::vector<Node> bits;
 };

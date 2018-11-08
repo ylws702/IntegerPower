@@ -9,6 +9,6 @@ public:
     BinaryBigInteger(const DecimalBigInteger& bigInt) :
         BinaryBigInteger(std::move(bigInt)) {}
     BinaryBigInteger(const DecimalBigInteger&& bigInt);
-    DecimalBigInteger ToDecimalBigInteger()const;
+    virtual DecimalBigInteger ToDecimalBigInteger()const;
 };
 
