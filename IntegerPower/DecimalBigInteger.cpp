@@ -44,7 +44,7 @@ DecimalBigInteger DecimalBigInteger::operator^(const DecimalBigInteger & a) cons
     {
         result = 1;
     }
-    for (i = 1; i < length; i++)
+    for (i = 1; i < length; ++i)
     {
         tmp *= tmp;
         if (power[i] == 1)
@@ -57,39 +57,53 @@ DecimalBigInteger DecimalBigInteger::operator^(const DecimalBigInteger & a) cons
 
 DecimalBigInteger& DecimalBigInteger::operator*=(const DecimalBigInteger & a)
 {
-    decltype(a.bits) result;
-    decltype(result)::value_type tmp;
-    int length1 = (int)this->bits.size(),
-        length2 = (int)a.bits.size(),
-        i, j, k;
-    result.resize(length1 + length2, 0);
-    for (i = 0; i < length1; ++i)
+    int len1 = this->bits.size(),
+        len2 = a.bits.size(),
+        lent = std::max(len1, len2),
+        len = 1,
+        i;
+    while (len < lent)
     {
-        for (j = 0; j < length2; ++j)
-        {
-            tmp = this->bits[i] * a.bits[j];
-            k = i + j;
-            result[k] += tmp % 10;
-            if (result[k] > 9)
-            {
-                result[k] -= 10;
-                ++result[k + 1];
-            }
-            ++k;
-            result[k] += tmp / 10;
-            while (result[k] > 9)
-            {
-                result[k] -= 10;
-                ++k;
-                ++result[k];
-            }
-        }
+        len <<= 1;
     }
-    if (result.back() == 0)
+    len <<= 1;
+    FFTNum rea(len, 0.0),
+        reb(len, 0.0),
+        ima(len, 0.0),
+        imb(len, 0.0);
+    std::copy_n(this->bits.cbegin(), len1, rea.begin());
+    std::copy_n(a.bits.cbegin(), len2, reb.begin());
+    //求出a、b的点值表示法
+    this->FFT(rea, ima, len, false);
+    this->FFT(reb, imb, len, false);
+    //求出c的点值表示法 
+    for (i = 0; i < len; ++i)
     {
-        result.pop_back();
+        double rec = rea[i] * reb[i] - ima[i] * imb[i];
+        double imc = rea[i] * imb[i] + ima[i] * reb[i];
+        rea[i] = rec;
+        ima[i] = imc;
     }
-    this->bits = result;
+    FFT(rea, ima, len, true);
+    for (i = 0; i < len; ++i)
+    {
+        rea[i] /= len;
+        ima[i] /= len;
+    }
+    this->bits.resize(len+1);
+    for (i = 0; i < len; ++i)
+    {
+        this->bits[i] = (int)(rea[i] + 0.5);
+    }
+    for (i = 0; i < len; ++i)
+    {
+        this->bits[i+1] += this->bits[i]/10;
+        this->bits[i] %= 10;
+    }
+    while (this->bits.back()==0)
+    {
+        this->bits.pop_back();
+    }
     return *this;
 }
 

@@ -29,22 +29,22 @@ void BigInteger::Print() const
     str[++i] = '\0';
     std::printf("%s", str.get());
 }
-void BigInteger::FFT(std::vector<FFTNode>& a, std::vector<FFTNode>& y, unsigned n, bool flag)
+void BigInteger::FFT(FFTNum& a, FFTNum& y, unsigned n, bool flag)
 {
     constexpr double pi = 3.1415926535897932;
     int i, j, k, m = 1, t; int log2n = std::log2(n);
     for (i = 0; i < n; ++i)//Êý×éÖØÅÅ
     {
-        for (j = 0, t = i; j < log2n; ++j)
+        for (j = 0, k = 0, t = i; j < log2n; ++j)
         {
-            j <<= 1;
-            j |= t & 1;
+            k <<= 1;
+            k |= t & 1;
             t >>= 1;
         }
-        if (j > i)
+        if (k > i)
         {
-            std::swap(a[i], a[j]);
-            std::swap(y[i], y[j]);
+            std::swap(a[i], a[k]);
+            std::swap(y[i], y[k]);
         }
     }
     for (i = 1; i <= log2n; ++i)

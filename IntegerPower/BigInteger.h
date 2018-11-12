@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <cctype>
 #include <complex>
 #include <iostream>
@@ -10,6 +11,7 @@ class BigInteger
 protected:
     using Node = std::uint32_t;
     using FFTNode = double;
+    using FFTNum = std::vector<FFTNode>;
     static_assert(std::is_integral<Node>::value, "Integral required.");
     std::vector<Node> bits;
 public:
@@ -20,5 +22,5 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const BigInteger&i);
     friend std::ostream& operator<<(std::ostream& os, const BigInteger&&i);
     virtual void Print()const;
-    void FFT(std::vector<FFTNode>& re, std::vector<FFTNode>& in, unsigned n, bool flag);
+    void FFT(FFTNum& re, FFTNum& in, unsigned n, bool flag);
 };
