@@ -21,4 +21,5 @@ public:
     ShortBinaryBigInteger operator^(const BinaryBigInteger & a) const;
     ShortBinaryBigInteger& operator=(const ShortBinaryBigInteger& a);
     virtual BinaryBigInteger ToBinaryBigInteger()const;
+    void FFT(std::vector<FFTNode>& re, std::vector<FFTNode>& in, unsigned n, bool flag)=delete;
 };
