@@ -16,11 +16,16 @@ inline ShortBinaryBigInteger::ShortBinaryBigInteger(T t)
 
 ShortBinaryBigInteger::ShortBinaryBigInteger(const BinaryBigInteger && bigInt)
 {
+    //紧缩处理前容器
     auto bits = std::move(bigInt).GetBits();
+    //紧缩处理后容器大小
     int length = (int)bits.size() / this->bitsCount,
+        //多出的二进制位数，高位补零
         rest = bits.size() % this->bitsCount,
         i, j;
-    this->bits = decltype(bits)(length + 1, 0);
+    //紧缩处理后容器
+    this->bits = Num(length + 1, 0);
+    //对能整除部分二进制位进行紧缩处理
     for (i = 0; i < length; ++i)
     {
         this->bits[i] |= bits[(i + 1)*this->bitsCount - 1];
@@ -30,6 +35,7 @@ ShortBinaryBigInteger::ShortBinaryBigInteger(const BinaryBigInteger && bigInt)
             this->bits[i] |= bits[i*this->bitsCount + j];
         }
     }
+    //对多出的二进制位进行紧缩处理
     if (rest != 0)
     {
         this->bits[i] |= bits[bits.size() - 1];
@@ -39,6 +45,7 @@ ShortBinaryBigInteger::ShortBinaryBigInteger(const BinaryBigInteger && bigInt)
             this->bits[i] |= bits[bits.size() - 1 - j];
         }
     }
+    //去掉高位的0
     while (this->bits.back() == 0)
     {
         this->bits.pop_back();
@@ -47,7 +54,7 @@ ShortBinaryBigInteger::ShortBinaryBigInteger(const BinaryBigInteger && bigInt)
 
 ShortBinaryBigInteger & ShortBinaryBigInteger::operator*=(const ShortBinaryBigInteger & a)
 {
-    decltype(a.bits) result;
+    Num result;
     Node tmp;
     const Node lowerBits = (1 << bitsCount) - 1;
     int length1 = (int)this->bits.size(),
@@ -61,12 +68,14 @@ ShortBinaryBigInteger & ShortBinaryBigInteger::operator*=(const ShortBinaryBigIn
             tmp = this->bits[i] * a.bits[j];
             k = i + j;
             result[k] += tmp;
-            if (result[k] < tmp)//溢出
+            //溢出处理
+            if (result[k] < tmp)
             {
                 do
                 {
                     ++k;
-                    ++result[k];//向前进位
+                    //向前进位
+                    ++result[k];
                 } while (result[k] == 0u);//自加溢出
             }
         }
@@ -82,14 +91,17 @@ ShortBinaryBigInteger & ShortBinaryBigInteger::operator*=(const ShortBinaryBigIn
         result[i] &= lowerBits;
         ++i;
         result[i] += tmp;
-        if (result[i] < tmp)//溢出
+        //溢出处理
+        if (result[i] < tmp)
         {
             do
             {
                 ++i;
-                ++result[i];//向前进位
+                //向前进位
+                ++result[i];
             } while (result[i] == 0u);//自加溢出
-            --i;//处理当前高位
+            //处理当前高位
+            --i;
         }
     }
     if (result.back() == 0u)
@@ -102,6 +114,7 @@ ShortBinaryBigInteger & ShortBinaryBigInteger::operator*=(const ShortBinaryBigIn
 
 ShortBinaryBigInteger ShortBinaryBigInteger::operator^(const BinaryBigInteger & a) const
 {
+    //先处理简单指数0和1
     auto power = a.GetBits();
     if (power.size() == 1)
     {
@@ -117,6 +130,7 @@ ShortBinaryBigInteger ShortBinaryBigInteger::operator^(const BinaryBigInteger & 
     ShortBinaryBigInteger tmp = *this,
         result;
     int length = (int)power.size(), i;
+    //平方幂算法
     if (power[0] == 1)
     {
         result.SetBits(tmp.GetBits());
@@ -127,7 +141,9 @@ ShortBinaryBigInteger ShortBinaryBigInteger::operator^(const BinaryBigInteger & 
     }
     for (i = 1; i < length; i++)
     {
+        //不断平方
         tmp *= tmp;
+        //指数二进制第i位为1就乘上tmp
         if (power[i] == 1)
         {
             result *= tmp;
@@ -144,23 +160,26 @@ ShortBinaryBigInteger & ShortBinaryBigInteger::operator=(const ShortBinaryBigInt
 
 BinaryBigInteger ShortBinaryBigInteger::ToBinaryBigInteger() const
 {
-    decltype(this->bits) bits;
+    Num bits;
     BinaryBigInteger result;
+    //展开处理后长度
     int length = (int)this->bits.size(),
-        i,j;
+        //计数
+        i, j;
     Node tmp;
     bits.resize(length*this->bitsCount);
-    for ( i = 0; i < length; ++i)
+    //二进制位展开处理
+    for (i = 0; i < length; ++i)
     {
         tmp = this->bits[i];
         bits[i*this->bitsCount] = tmp % 2;
-        for ( j = 1; j < this->bitsCount; j++)
+        for (j = 1; j < this->bitsCount; j++)
         {
             tmp >>= 1;
-            bits[i*this->bitsCount+j]= tmp % 2;
+            bits[i*this->bitsCount + j] = tmp % 2;
         }
     }
-    while (bits.back()==0)
+    while (bits.back() == 0)
     {
         bits.pop_back();
     }

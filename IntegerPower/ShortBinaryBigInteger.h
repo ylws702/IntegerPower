@@ -1,5 +1,6 @@
 #pragma once
 #include "BinaryBigInteger.h"
+//紧凑排列的二进制大整数
 class ShortBinaryBigInteger :
     public BigInteger
 {
