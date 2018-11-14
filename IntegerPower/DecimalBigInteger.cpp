@@ -57,8 +57,8 @@ DecimalBigInteger DecimalBigInteger::operator^(const DecimalBigInteger & a) cons
 
 DecimalBigInteger& DecimalBigInteger::operator*=(const DecimalBigInteger & a)
 {
-    int len1 = this->bits.size(),
-        len2 = a.bits.size(),
+    int len1 = (int)this->bits.size(),
+        len2 = (int)a.bits.size(),
         lent = std::max(len1, len2),
         len = 1,
         i;
@@ -67,40 +67,35 @@ DecimalBigInteger& DecimalBigInteger::operator*=(const DecimalBigInteger & a)
         len <<= 1;
     }
     len <<= 1;
-    FFTNum rea(len, 0.0),
-        reb(len, 0.0),
-        ima(len, 0.0),
-        imb(len, 0.0);
-    std::copy_n(this->bits.cbegin(), len1, rea.begin());
-    std::copy_n(a.bits.cbegin(), len2, reb.begin());
-    //求出a、b的点值表示法
-    this->FFT(rea, ima, len, false);
-    this->FFT(reb, imb, len, false);
+    FFTNum fft1(len, { 0.0,0.0 }),
+        fft2(len, { 0.0,0.0 });
+    std::copy_n(this->bits.cbegin(), len1, fft1.begin());
+    std::copy_n(a.bits.cbegin(), len2, fft2.begin());
+    //使用快速傅里叶变换求出a、b的点值表示法
+    this->FFT(fft1, false);
+    this->FFT(fft2, false);
     //求出c的点值表示法 
     for (i = 0; i < len; ++i)
     {
-        double rec = rea[i] * reb[i] - ima[i] * imb[i];
-        double imc = rea[i] * imb[i] + ima[i] * reb[i];
-        rea[i] = rec;
-        ima[i] = imc;
+        fft1[i] *= fft2[i];
     }
-    FFT(rea, ima, len, true);
+    //快速傅里叶逆变换求出c的系数表示法
+    FFT(fft1, true);
     for (i = 0; i < len; ++i)
     {
-        rea[i] /= len;
-        ima[i] /= len;
+        fft1[i] /= len;
     }
-    this->bits.resize(len+1);
+    this->bits.resize(len + 1);
     for (i = 0; i < len; ++i)
     {
-        this->bits[i] = (int)(rea[i] + 0.5);
+        this->bits[i] = (int)(fft1[i].real() + 0.5);
     }
     for (i = 0; i < len; ++i)
     {
-        this->bits[i+1] += this->bits[i]/10;
+        this->bits[i + 1] += this->bits[i] / 10;
         this->bits[i] %= 10;
     }
-    while (this->bits.back()==0)
+    while (this->bits.back() == 0)
     {
         this->bits.pop_back();
     }

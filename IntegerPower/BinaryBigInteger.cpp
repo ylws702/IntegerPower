@@ -4,7 +4,7 @@
 
 BinaryBigInteger::BinaryBigInteger(const DecimalBigInteger && decimal)
 {
-    auto bits = decimal.GetBits();
+    auto bits = std::move(decimal).GetBits();
     decltype(bits)::value_type remainder;
     int length, i;
     while (!bits.empty())

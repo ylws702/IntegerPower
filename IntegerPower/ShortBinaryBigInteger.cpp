@@ -16,7 +16,7 @@ inline ShortBinaryBigInteger::ShortBinaryBigInteger(T t)
 
 ShortBinaryBigInteger::ShortBinaryBigInteger(const BinaryBigInteger && bigInt)
 {
-    auto bits = bigInt.GetBits();
+    auto bits = std::move(bigInt).GetBits();
     int length = (int)bits.size() / this->bitsCount,
         rest = bits.size() % this->bitsCount,
         i, j;
@@ -146,7 +146,7 @@ BinaryBigInteger ShortBinaryBigInteger::ToBinaryBigInteger() const
 {
     decltype(this->bits) bits;
     BinaryBigInteger result;
-    int length = this->bits.size(),
+    int length = (int)this->bits.size(),
         i,j;
     Node tmp;
     bits.resize(length*this->bitsCount);
